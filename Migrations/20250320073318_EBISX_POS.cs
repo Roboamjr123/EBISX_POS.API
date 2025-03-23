@@ -61,6 +61,31 @@ namespace EBISX_POS.API.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "StoreBranches",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    BranchName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BranchAddress = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    VAtRegTin = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    MinNo = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SerialNumber = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ReportDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
+                    Time = table.Column<TimeSpan>(type: "time(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StoreBranches", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -260,6 +285,110 @@ namespace EBISX_POS.API.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "Receipts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ReceiptId = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    InvoiceNumber = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ReceiptDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    DateIssued = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    ValidUntil = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    DateCreated = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ReceiptType = table.Column<int>(type: "int", nullable: true),
+                    ReportDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
+                    ReportTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
+                    StartDateTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
+                    EndDateTime = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
+                    BeginningSI = table.Column<int>(type: "int", nullable: true),
+                    EndingSI = table.Column<int>(type: "int", nullable: true),
+                    BeginningVOID = table.Column<int>(type: "int", nullable: true),
+                    EndingVOID = table.Column<int>(type: "int", nullable: true),
+                    BeginningRETURN = table.Column<int>(type: "int", nullable: true),
+                    EndingRETURN = table.Column<int>(type: "int", nullable: true),
+                    ResetCounter = table.Column<int>(type: "int", nullable: true),
+                    ZCounter = table.Column<int>(type: "int", nullable: true),
+                    PresentAccumulatedSales = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    PreviousAccumulatedSales = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    SalesForTheDay = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    VatableSales = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    VatAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    VatExemptSales = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    ZeroRatedSales = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    GrossAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    Discount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    ReturnAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    VoidAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    VatAdjustment = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    NetAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    SCDiscount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    PWDDiscount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    NAACDiscount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    SoloParentDiscount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    OtherDiscount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    SalesVoid = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    SalesReturn = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    SCTransaction = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    PWDTransaction = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    RegDiscTransaction = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    ZeroRatedTransaction = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    VatOnReturn = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    OtherVatAdjustments = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    CashReceived = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    ChequeReceived = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    CreditCardReceived = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    GiftCertificate = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    TotalPayments = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    CashInDrawer = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    OpeningFund = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    WithdrawalAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    ShortOver = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    TransactionId = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TransactionDate = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    TransactTotalAmount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
+                    ReceiptContent = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CashierUserEmail = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ManagerUserEmail = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BranchId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Receipts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Receipts_Order_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Order",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Receipts_StoreBranches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "StoreBranches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Receipts_User_CashierUserEmail",
+                        column: x => x.CashierUserEmail,
+                        principalTable: "User",
+                        principalColumn: "UserEmail",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Receipts_User_ManagerUserEmail",
+                        column: x => x.ManagerUserEmail,
+                        principalTable: "User",
+                        principalColumn: "UserEmail");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Item_AddOnId",
                 table: "Item",
@@ -311,6 +440,27 @@ namespace EBISX_POS.API.Migrations
                 column: "ManagerUserEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Receipts_BranchId",
+                table: "Receipts",
+                column: "BranchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Receipts_CashierUserEmail",
+                table: "Receipts",
+                column: "CashierUserEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Receipts_ManagerUserEmail",
+                table: "Receipts",
+                column: "ManagerUserEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Receipts_OrderId",
+                table: "Receipts",
+                column: "OrderId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Timestamp_CashierUserEmail",
                 table: "Timestamp",
                 column: "CashierUserEmail");
@@ -343,6 +493,9 @@ namespace EBISX_POS.API.Migrations
                 name: "Item");
 
             migrationBuilder.DropTable(
+                name: "Receipts");
+
+            migrationBuilder.DropTable(
                 name: "Timestamp");
 
             migrationBuilder.DropTable(
@@ -350,6 +503,9 @@ namespace EBISX_POS.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Order");
+
+            migrationBuilder.DropTable(
+                name: "StoreBranches");
 
             migrationBuilder.DropTable(
                 name: "AddOnType");

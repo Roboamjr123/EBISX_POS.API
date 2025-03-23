@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ManagerLibrary.Data;
+using ManagerLibrary.ManagerData;
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 
 namespace EBISX_POS.API.Models
@@ -15,7 +17,13 @@ namespace EBISX_POS.API.Models
         public required User Cashier { get; set; }
         public User? Manager { get; set; }
 
+        // One-to-One Relationship with CustomerReceipt
+        public Receipt? Receipt { get; set; }
+
         // Navigation property for related Items
         public ICollection<Item> Items { get; set; } = new List<Item>();
+
+        public int BranchId { get; set; } // 🔥 This must exist
+        public StoreBranch Branch { get; set; } // Optional navigation property
     }
 }

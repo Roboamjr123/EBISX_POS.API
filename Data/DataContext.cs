@@ -1,4 +1,6 @@
 ﻿using EBISX_POS.API.Models;
+using ManagerLibrary.Data;
+using ManagerLibrary.ManagerData;
 using Microsoft.EntityFrameworkCore;
 
 namespace EBISX_POS.API.Data
@@ -17,6 +19,19 @@ namespace EBISX_POS.API.Data
         public DbSet<Item> Item { get; set; }
         public DbSet<DrinkType> DrinkType { get; set; }
         public DbSet<AddOnType> AddOnType { get; set; }
+
+        public DbSet<StoreBranch> StoreBranches { get; set; }
+        public DbSet<Receipt> Receipts { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>()
+               .HasOne(o => o.Receipt)        // Order has one Receipt
+               .WithOne(cr => cr.Order)       // Receipt has one Order
+               .HasForeignKey<Receipt>(cr => cr.OrderId); // Receipt.OrderId is the FK
+        }
+
+
 
         // ✅ Auto-calculate subtotal before saving
         //public override int SaveChanges()

@@ -1,9 +1,9 @@
 using EBISX_POS.API.Models;
 using EBISX_POS.API.Models.Utils;
+using ManagerLibrary.Data;
+using ManagerLibrary.Data.utils;
+using ManagerLibrary.ManagerData;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
 
 namespace EBISX_POS.API.Data
 {
@@ -35,6 +35,7 @@ namespace EBISX_POS.API.Data
                 };
                 context.User.AddRange(users);
 
+    
                 var drinkTypes = new DrinkType[] {
                     new DrinkType { DrinkTypeName = "Hot" },
                     new DrinkType { DrinkTypeName = "Cold" },
@@ -129,6 +130,43 @@ namespace EBISX_POS.API.Data
                 };
                 context.Menu.AddRange(menus);
 
+
+                var Branches = new StoreBranch[]
+                {
+                    new StoreBranch {BranchName = "Guadalupe", BranchAddress = "Guadalupe, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123" },
+                    new StoreBranch {BranchName = "Mabolo", BranchAddress = "Mabolo, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123" },
+                    new StoreBranch {BranchName = "Lapu-Lapu", BranchAddress = "Lapu-Lapu, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123" },
+                };
+                context.StoreBranches.AddRange(Branches);
+
+                var orders = new Order[]
+                {
+                    new Order { OrderType = "Dine-In", TotalAmount = 20.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[1] },
+                    new Order { OrderType = "Takeaway", TotalAmount = 15.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[2] },
+                    new Order { OrderType = "Dine-In", TotalAmount = 25.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[3] },
+                    new Order { OrderType = "Takeaway", TotalAmount = 30.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[4] },
+                    new Order { OrderType = "Dine-In", TotalAmount = 35.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[5] },
+                    new Order { OrderType = "Takeaway", TotalAmount = 40.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[6] },
+                    new Order { OrderType = "Dine-In", TotalAmount = 45.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[7] },
+                    new Order { OrderType = "Takeaway", TotalAmount = 50.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[8] },
+                    new Order { OrderType = "Dine-In", TotalAmount = 55.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[9] },
+                    new Order { OrderType = "Takeaway", TotalAmount = 60.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[0] }
+                };
+                context.Order.AddRange(orders);
+                context.SaveChanges();
+
+                var Receipts = new Receipt[]
+                {
+                    new Receipt { InvoiceNumber = "INV-0001", ReceiptDate = DateTime.Now, OrderId = orders[0].Id, ReceiptType = ReceiptType.Regular, Cashier = users[1], BranchId = Branches[0].Id   },
+                    new Receipt { InvoiceNumber = "INV-0002", ReceiptDate = DateTime.Now, OrderId = orders[1].Id, ReceiptType = ReceiptType.SeniorCitizen,  Cashier = users[2],BranchId = Branches[0].Id },
+                    new Receipt { InvoiceNumber = "INV-0003", ReceiptDate = DateTime.Now, OrderId = orders[2].Id, ReceiptType = ReceiptType.PWD,  Cashier = users[3], BranchId = Branches[0].Id },
+                    new Receipt { InvoiceNumber = "INV-0004", ReceiptDate = DateTime.Now, OrderId = orders[3].Id, ReceiptType = ReceiptType.Regular,  Cashier = users[4], BranchId = Branches[1].Id},
+                    new Receipt { InvoiceNumber = "INV-0005", ReceiptDate = DateTime.Now, OrderId = orders[4].Id, ReceiptType = ReceiptType.SeniorCitizen,  Cashier = users[5], BranchId = Branches[0].Id },
+                    new Receipt { InvoiceNumber = "INV-0006", ReceiptDate = DateTime.Now, OrderId = orders[5].Id, ReceiptType = ReceiptType.PWD, Cashier = users[6], BranchId = Branches[1].Id },
+                    new Receipt { InvoiceNumber = "INV-0007", ReceiptDate = DateTime.Now, OrderId = orders[6].Id, ReceiptType = ReceiptType.Regular,  Cashier = users[7], BranchId = Branches[0].Id },
+    
+                };
+                context.Receipts.AddRange(Receipts);
                 context.SaveChanges();
             }
         }

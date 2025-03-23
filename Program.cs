@@ -1,6 +1,8 @@
 ﻿using EBISX_POS.API.Data;
 using EBISX_POS.API.Services.Interfaces;
 using EBISX_POS.API.Services.Repositories;
+using ManagerLibrary.Services.Interface;
+using ManagerLibrary.Services.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -29,6 +31,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<IAuth, AuthRepository>();
 builder.Services.AddScoped<IMenu, MenuRepository>();
 builder.Services.AddScoped<IOrder, OrderRepository>();
+builder.Services.AddScoped<IReport, ReportRepository>();
+//builder.Services.AddScoped<IBranch>
+
 
 // Add CORS
 builder.Services.AddCors(options =>
