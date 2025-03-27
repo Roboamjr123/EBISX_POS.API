@@ -14,5 +14,6 @@ namespace ManagerLibrary.Services.DTO.BranchStore
         public required string VAtRegTin { get; set; }
         public required string MinNo { get; set; }
         public required string SerialNumber { get; set; }
+        public required string PosNumber { get; set; }
     }
 }

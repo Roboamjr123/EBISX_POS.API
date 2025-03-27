@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ManagerLibrary.Data
 {
-    public class Receipt
+    public class Invoice
     {
         // Primary Identifier
         [Key]
@@ -19,8 +19,8 @@ namespace ManagerLibrary.Data
         [Required]
         public string InvoiceNumber { get; set; } = string.Empty;
 
-
         public DateTimeOffset ReceiptDate { get; set; }
+        public DateTimeOffset ReceiptTime { get; set; }
         public DateTimeOffset DateIssued { get; set; }
         public DateTimeOffset ValidUntil { get; set; }
         public DateTimeOffset DateCreated { get; set; }
@@ -32,9 +32,9 @@ namespace ManagerLibrary.Data
 
 
         // Report Metadata
-        public DateTimeOffset ReportDate { get; set; }
-        public DateTimeOffset ReportTime { get; set; } 
-        public DateTimeOffset StartDateTime { get; set; } 
+        public DateTimeOffset ReportDate { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset ReportTime { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset StartDateTime { get; set; }
         public DateTimeOffset EndDateTime { get; set; }
         // Invoice Numbers
         public int BeginningSI { get; set; }
@@ -64,7 +64,7 @@ namespace ManagerLibrary.Data
         public decimal VoidAmount { get; set; }
         public decimal VatAdjustment { get; set; }
         public decimal NetAmount { get; set; }
-        
+
         // Discount Summary
         public decimal SCDiscount { get; set; }
         public decimal PWDDiscount { get; set; }
@@ -111,7 +111,5 @@ namespace ManagerLibrary.Data
         public StoreBranch Branch { get; set; } = null!;  // Navigation property
 
     }
-
-
 
 }

@@ -27,9 +27,10 @@ namespace ManagerLibrary.Services.Repositories
                     BranchAddress = addBranch.BranchAddress,
                     VAtRegTin = addBranch.VAtRegTin,
                     MinNo = addBranch.MinNo,
-                    SerialNumber = addBranch.SerialNumber
+                    SerialNumber = addBranch.SerialNumber,
+                    PosNumber = addBranch.PosNumber
                 };
-                _context.StoreBranches.Add(branch);
+                _context.StoreBranch.Add(branch);
                 _context.SaveChanges();
 
                 return Task.FromResult("Branch Added Successfully");
@@ -42,50 +43,91 @@ namespace ManagerLibrary.Services.Repositories
 
         public async Task<List<BranchDto>> BranchList()
         {
-            var branches = await _context.StoreBranches.ToListAsync();
+            var branches = await _context.StoreBranch.ToListAsync();
 
             return branches.Select(branch => new BranchDto
             {
-                Id = branch.Id,
+                Id = branch.BranchId,
                 BranchName = branch.BranchName,
                 BranchAddress = branch.BranchAddress,
                 VAtRegTin = branch.VAtRegTin,
                 MinNo = branch.MinNo,
-                SerialNumber = branch.SerialNumber
+                SerialNumber = branch.SerialNumber,
+                PosNumber = branch.PosNumber
             }).ToList();
         }
 
-        public Task<List<GetCustomerReceiptDto>> GetCustomerReceipts()
+        public async Task<List<GetCustomerReceiptDto>> GetCustomerReceipts()
         {
-            throw new NotImplementedException();
+
+            return await _context.Invoice
+                    .Include(r => r.Order)
+                    .Include(r => r.Cashier)
+                    .Include(r => r.Order.Branch)
+                    .Where(r => r.Order != null && r.Cashier != null && r.Order.Branch != null) // Ensure no null references
+                    .Select(r => new GetCustomerReceiptDto
+                    {
+                        Id = r.Id,
+                        InvoiceNumber = r.InvoiceNumber,
+                        ReceiptDate = r.ReceiptDate.ToString("MM/dd/yyyy") ?? "N/A", // No need for casting
+                        ReceiptTime = r.ReceiptTime.ToString("HH:mm:ss") ?? "N/A", // No need for casting
+                        OrderId = r.Order.Id,
+                        TotalAmount = r.Order.TotalAmount,
+                        Vatablesales = r.VatableSales,
+                        VatAmount = r.VatAmount,
+                        VatExemptSales = r.VatExemptSales,
+                        ReceiptType = r.ReceiptType,
+                        CashierName = r.Cashier.UserFName,
+                        BranchName = r.Order.Branch.BranchName,
+                        BranchAddress = r.Order.Branch.BranchAddress
+
+                    })
+                    .ToListAsync();
         }
 
-        //    public  Task<List<GetCustomerReceiptDto>> GetCustomerReceipts()
-        //    {
-        //        try
-        //        {
+        public async Task<List<SalesTrackDto>> GetSalesTrack()
+        {
+            var totalSales = await _context.Order.SumAsync(o => o.TotalAmount);
+            var latestInvoice = await _context.Invoice
+                                             .OrderByDescending(r => r.Id)
+                                             .Select(r => new
+                                             {
+                                                 r.CashInDrawer,
+                                                 r.ReportDate,
+                                                 r.ReportTime
+                                             })
+                                             .FirstOrDefaultAsync();
 
-        //          var receipts = await _context.Receipts
-        //         .Include(r => r.Order)
-        //         .Include(r => r.Cashier)
-        //         .Select(r => new GetCustomerReceiptDto
-        //         {
-        //             Id = r.Id,
-        //             InvoiceNumber = r.InvoiceNumber,
-        //             ReceiptDate = (DateTimeOffset)r.ReceiptDate, // No need for .HasValue or .Value
-        //             OrderId = r.Order.Id,
-        //             ReceiptType = r.ReceiptType,
-        //             CashierName = r.Cashier.UserEmail,
-        //             BranchId = r.Order.BranchId // Ensure this field exists in your Order entity
-        //         }).ToListAsync();
+            return new List<SalesTrackDto>
+            {
+                new SalesTrackDto
+                {
+                    TotalSales = totalSales,
+                    CashInDrawer = latestInvoice?.CashInDrawer ?? 0,
+                    ReportDate = latestInvoice?.ReportDate.ToString("MM/dd/yyy") ?? "N/A",
+                    ReportTime = latestInvoice?.ReportTime.ToString("HH:mm:ss") ?? "N/A"
+                }
+            };
+        }
 
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return new List<GetCustomerReceiptDto>();
-        //        }
+        public async Task<List<GetDailySalesReceiptDto>> GetDailySalesReceipts()
+        {
+            var dailySalesReceipts = await _context.Invoice
+                    .Select(i => new GetDailySalesReceiptDto
+                {
+                    ReceiptDate = i.ReceiptDate.ToString("MM/dd/yyyy"),
+                    ReceiptTime = i.ReceiptTime.ToString("HH:mm:ss"),
+                    InvoiceNumber = i.InvoiceNumber,
+                    TotalAmount = i.GrossAmount,
+                    GrossSales = i.GrossAmount,
+                    Returns = i.ReturnAmount,
+                    LessPriceDiscount = i.Discount,
+                    VatableSales = i.VatableSales,
+                    ExepmtSales = i.VatExemptSales,
+                    AmountDue = null
+                   }).ToListAsync();
 
-        //    }
-    
+            return dailySalesReceipts;
         }
     }
+}

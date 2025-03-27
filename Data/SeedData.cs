@@ -15,7 +15,7 @@ namespace EBISX_POS.API.Data
                 serviceProvider.GetRequiredService<DbContextOptions<DataContext>>()))
             {
                 // Look for any data already in the database.
-                if (context.User.Any() || context.Category.Any() || context.Menu.Any() || context.Timestamp.Any() || context.Order.Any() || context.Item.Any())
+                if (context.User.Any() || context.Category.Any() || context.Menu.Any() || context.Timestamp.Any() || context.Order.Any() || context.Item.Any()  )
                 {
                     return;   // DB has been seeded
                 }
@@ -131,43 +131,46 @@ namespace EBISX_POS.API.Data
                 context.Menu.AddRange(menus);
 
 
-                var Branches = new StoreBranch[]
+                var branches = new StoreBranch[]
                 {
-                    new StoreBranch {BranchName = "Guadalupe", BranchAddress = "Guadalupe, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123" },
-                    new StoreBranch {BranchName = "Mabolo", BranchAddress = "Mabolo, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123" },
-                    new StoreBranch {BranchName = "Lapu-Lapu", BranchAddress = "Lapu-Lapu, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123" },
+                     new StoreBranch {BranchName = "Guadalupe", BranchAddress = "Guadalupe, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123", PosNumber="1293023292"},
+                     new StoreBranch {BranchName = "Mabolo", BranchAddress = "Mabolo, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123", PosNumber= "1293023292" },
+                     new StoreBranch {BranchName = "Lapu-Lapu", BranchAddress = "Lapu-Lapu, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123",PosNumber="0293212323" },
                 };
-                context.StoreBranches.AddRange(Branches);
+                context.StoreBranch.AddRange(branches);
+                context.SaveChanges();
 
                 var orders = new Order[]
                 {
-                    new Order { OrderType = "Dine-In", TotalAmount = 20.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[1] },
-                    new Order { OrderType = "Takeaway", TotalAmount = 15.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[2] },
-                    new Order { OrderType = "Dine-In", TotalAmount = 25.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[3] },
-                    new Order { OrderType = "Takeaway", TotalAmount = 30.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[4] },
-                    new Order { OrderType = "Dine-In", TotalAmount = 35.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[5] },
-                    new Order { OrderType = "Takeaway", TotalAmount = 40.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[6] },
-                    new Order { OrderType = "Dine-In", TotalAmount = 45.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[7] },
-                    new Order { OrderType = "Takeaway", TotalAmount = 50.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[8] },
-                    new Order { OrderType = "Dine-In", TotalAmount = 55.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[9] },
-                    new Order { OrderType = "Takeaway", TotalAmount = 60.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[0] }
+                     new Order { OrderType = "Dine-In", TotalAmount = 20.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[1], BranchId = branches[0].BranchId },
+                     new Order { OrderType = "Takeaway", TotalAmount = 15.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[2], BranchId = branches[0].BranchId },
+                     new Order { OrderType = "Dine-In", TotalAmount = 25.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[3], BranchId = branches[0].BranchId },
+                     new Order { OrderType = "Takeaway", TotalAmount = 30.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[4], BranchId = branches[0].BranchId },
+                     new Order { OrderType = "Dine-In", TotalAmount = 35.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[5], BranchId = branches[0].BranchId },
+                     new Order { OrderType = "Takeaway", TotalAmount = 40.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[6], BranchId = branches[0].BranchId },
+                     new Order { OrderType = "Dine-In", TotalAmount = 45.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[7], BranchId = branches[0].BranchId },
+                     new Order { OrderType = "Takeaway", TotalAmount = 50.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[8], BranchId = branches[0].BranchId },
+                     new Order { OrderType = "Dine-In", TotalAmount = 55.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[9], BranchId = branches[0].BranchId },
+                     new Order { OrderType = "Takeaway", TotalAmount = 60.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[0], BranchId = branches[0].BranchId }
                 };
                 context.Order.AddRange(orders);
                 context.SaveChanges();
 
-                var Receipts = new Receipt[]
+                var Receipts = new Invoice[]
                 {
-                    new Receipt { InvoiceNumber = "INV-0001", ReceiptDate = DateTime.Now, OrderId = orders[0].Id, ReceiptType = ReceiptType.Regular, Cashier = users[1], BranchId = Branches[0].Id   },
-                    new Receipt { InvoiceNumber = "INV-0002", ReceiptDate = DateTime.Now, OrderId = orders[1].Id, ReceiptType = ReceiptType.SeniorCitizen,  Cashier = users[2],BranchId = Branches[0].Id },
-                    new Receipt { InvoiceNumber = "INV-0003", ReceiptDate = DateTime.Now, OrderId = orders[2].Id, ReceiptType = ReceiptType.PWD,  Cashier = users[3], BranchId = Branches[0].Id },
-                    new Receipt { InvoiceNumber = "INV-0004", ReceiptDate = DateTime.Now, OrderId = orders[3].Id, ReceiptType = ReceiptType.Regular,  Cashier = users[4], BranchId = Branches[1].Id},
-                    new Receipt { InvoiceNumber = "INV-0005", ReceiptDate = DateTime.Now, OrderId = orders[4].Id, ReceiptType = ReceiptType.SeniorCitizen,  Cashier = users[5], BranchId = Branches[0].Id },
-                    new Receipt { InvoiceNumber = "INV-0006", ReceiptDate = DateTime.Now, OrderId = orders[5].Id, ReceiptType = ReceiptType.PWD, Cashier = users[6], BranchId = Branches[1].Id },
-                    new Receipt { InvoiceNumber = "INV-0007", ReceiptDate = DateTime.Now, OrderId = orders[6].Id, ReceiptType = ReceiptType.Regular,  Cashier = users[7], BranchId = Branches[0].Id },
+                    new Invoice { InvoiceNumber = "INV-0001", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[0].Id, ReceiptType = ReceiptType.Regular, Cashier = users[1], BranchId = branches[0].BranchId , CashInDrawer = 2000m   },
+                    new Invoice { InvoiceNumber = "INV-0002", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[1].Id, ReceiptType = ReceiptType.SeniorCitizen,  Cashier = users[2],BranchId = branches[0].BranchId, CashInDrawer = 2000m },
+                    new Invoice { InvoiceNumber = "INV-0003", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[2].Id, ReceiptType = ReceiptType.PWD,  Cashier = users[3], BranchId = branches[0].BranchId, CashInDrawer = 2000m },
+                    new Invoice { InvoiceNumber = "INV-0004", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[3].Id, ReceiptType = ReceiptType.Regular,  Cashier = users[4], BranchId = branches[0].BranchId, CashInDrawer = 2000m},
+                    new Invoice { InvoiceNumber = "INV-0005", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[4].Id, ReceiptType = ReceiptType.SeniorCitizen,  Cashier = users[5], BranchId = branches[0].BranchId, CashInDrawer = 2000m },
+                    new Invoice { InvoiceNumber = "INV-0006", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[5].Id, ReceiptType = ReceiptType.PWD, Cashier = users[6], BranchId = branches[0].BranchId , CashInDrawer = 2000m},
+                    new Invoice { InvoiceNumber = "INV-0007", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[6].Id, ReceiptType = ReceiptType.Regular,  Cashier = users[7], BranchId = branches[0].BranchId , CashInDrawer = 2000m },
     
                 };
-                context.Receipts.AddRange(Receipts);
+                context.Invoice.AddRange(Receipts);
                 context.SaveChanges();
+
+                
             }
         }
     }

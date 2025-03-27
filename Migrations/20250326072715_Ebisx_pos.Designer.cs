@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EBISX_POS.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250320073318_EBISX_POS")]
-    partial class EBISX_POS
+    [Migration("20250326072715_Ebisx_pos")]
+    partial class Ebisx_pos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -129,6 +129,136 @@ namespace EBISX_POS.API.Migrations
                     b.ToTable("Item");
                 });
 
+            modelBuilder.Entity("EBISX_POS.API.Models.Manager.CustomerReceipt", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("CashReceived")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("CashierUserEmail")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<DateTimeOffset>("DateCreated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("GrossAmount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("NetAmount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReceiptContent")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTimeOffset>("ReceiptDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int?>("ReceiptType")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPayments")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.HasIndex("CashierUserEmail");
+
+                    b.ToTable("CustomerReceipt");
+                });
+
+            modelBuilder.Entity("EBISX_POS.API.Models.Manager.DailySalesSummary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("ReportDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("TotalDiscounts")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("TotalGrossSales")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("TotalNetSales")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("TotalPaymentsReceived")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("TotalReturnedTransactions")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalTransactions")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalVoidedTransactions")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("DailySalesSummary");
+                });
+
+            modelBuilder.Entity("EBISX_POS.API.Models.Manager.OrderPurchaseSummary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("ReportDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("TotalItemsSold")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalOrderAmount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("TotalOrders")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
+
+                    b.ToTable("OrderPurchaseSummary");
+                });
+
             modelBuilder.Entity("EBISX_POS.API.Models.Menu", b =>
                 {
                     b.Property<int>("Id")
@@ -190,6 +320,9 @@ namespace EBISX_POS.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CashierUserEmail")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -214,6 +347,8 @@ namespace EBISX_POS.API.Migrations
                         .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("CashierUserEmail");
 
@@ -299,7 +434,7 @@ namespace EBISX_POS.API.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("ManagerLibrary.Data.Receipt", b =>
+            modelBuilder.Entity("ManagerLibrary.Data.Invoice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -307,59 +442,59 @@ namespace EBISX_POS.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BeginningRETURN")
+                    b.Property<int>("BeginningRETURN")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BeginningSI")
+                    b.Property<int>("BeginningSI")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BeginningVOID")
+                    b.Property<int>("BeginningVOID")
                         .HasColumnType("int");
 
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("CashInDrawer")
+                    b.Property<decimal>("CashInDrawer")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("CashReceived")
+                    b.Property<decimal>("CashReceived")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("CashierUserEmail")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
-                    b.Property<decimal?>("ChequeReceived")
+                    b.Property<decimal>("ChequeReceived")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("CreditCardReceived")
+                    b.Property<decimal>("CreditCardReceived")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<DateTimeOffset?>("DateCreated")
+                    b.Property<DateTimeOffset>("DateCreated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTimeOffset?>("DateIssued")
+                    b.Property<DateTimeOffset>("DateIssued")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<decimal?>("Discount")
+                    b.Property<decimal>("Discount")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<DateTimeOffset>("EndDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("EndingRETURN")
+                    b.Property<int>("EndingRETURN")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EndingSI")
+                    b.Property<int>("EndingSI")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EndingVOID")
+                    b.Property<int>("EndingVOID")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("GiftCertificate")
+                    b.Property<decimal>("GiftCertificate")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("GrossAmount")
+                    b.Property<decimal>("GrossAmount")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("InvoiceNumber")
@@ -369,49 +504,53 @@ namespace EBISX_POS.API.Migrations
                     b.Property<string>("ManagerUserEmail")
                         .HasColumnType("varchar(255)");
 
-                    b.Property<decimal?>("NAACDiscount")
+                    b.Property<decimal>("NAACDiscount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("NetAmount")
+                    b.Property<decimal>("NetAmount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("OpeningFund")
+                    b.Property<decimal>("OpeningFund")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("OtherDiscount")
+                    b.Property<decimal>("OtherDiscount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("OtherVatAdjustments")
+                    b.Property<decimal>("OtherVatAdjustments")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("PWDDiscount")
+                    b.Property<decimal>("PWDDiscount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("PWDTransaction")
+                    b.Property<decimal>("PWDTransaction")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("PresentAccumulatedSales")
+                    b.Property<decimal>("PresentAccumulatedSales")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("PreviousAccumulatedSales")
+                    b.Property<decimal>("PreviousAccumulatedSales")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<string>("ReceiptContent")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("ReceiptDate")
+                    b.Property<DateTimeOffset>("ReceiptDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ReceiptId")
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("ReceiptType")
+                    b.Property<DateTimeOffset>("ReceiptTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("ReceiptType")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("RegDiscTransaction")
+                    b.Property<decimal>("RegDiscTransaction")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<DateTimeOffset>("ReportDate")
@@ -420,79 +559,80 @@ namespace EBISX_POS.API.Migrations
                     b.Property<DateTimeOffset>("ReportTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("ResetCounter")
+                    b.Property<int>("ResetCounter")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("ReturnAmount")
+                    b.Property<decimal>("ReturnAmount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("SCDiscount")
+                    b.Property<decimal>("SCDiscount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("SCTransaction")
+                    b.Property<decimal>("SCTransaction")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("SalesForTheDay")
+                    b.Property<decimal>("SalesForTheDay")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("SalesReturn")
+                    b.Property<decimal>("SalesReturn")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("SalesVoid")
+                    b.Property<decimal>("SalesVoid")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("ShortOver")
+                    b.Property<decimal>("ShortOver")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("SoloParentDiscount")
+                    b.Property<decimal>("SoloParentDiscount")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<DateTimeOffset>("StartDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<decimal?>("TotalPayments")
+                    b.Property<decimal>("TotalPayments")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("TransactTotalAmount")
+                    b.Property<decimal>("TransactTotalAmount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<DateTime?>("TransactionDate")
+                    b.Property<DateTime>("TransactionDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("TransactionId")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTimeOffset?>("ValidUntil")
+                    b.Property<DateTimeOffset>("ValidUntil")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<decimal?>("VatAdjustment")
+                    b.Property<decimal>("VatAdjustment")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("VatAmount")
+                    b.Property<decimal>("VatAmount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("VatExemptSales")
+                    b.Property<decimal>("VatExemptSales")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("VatOnReturn")
+                    b.Property<decimal>("VatOnReturn")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("VatableSales")
+                    b.Property<decimal>("VatableSales")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("VoidAmount")
+                    b.Property<decimal>("VoidAmount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("WithdrawalAmount")
+                    b.Property<decimal>("WithdrawalAmount")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<int?>("ZCounter")
+                    b.Property<int>("ZCounter")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("ZeroRatedSales")
+                    b.Property<decimal>("ZeroRatedSales")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal?>("ZeroRatedTransaction")
+                    b.Property<decimal>("ZeroRatedTransaction")
                         .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
@@ -506,16 +646,16 @@ namespace EBISX_POS.API.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Receipts");
+                    b.ToTable("Invoice");
                 });
 
             modelBuilder.Entity("ManagerLibrary.ManagerData.StoreBranch", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("BranchId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("BranchId"));
 
                     b.Property<string>("BranchAddress")
                         .IsRequired()
@@ -526,6 +666,10 @@ namespace EBISX_POS.API.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("MinNo")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PosNumber")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -543,9 +687,9 @@ namespace EBISX_POS.API.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.HasKey("Id");
+                    b.HasKey("BranchId");
 
-                    b.ToTable("StoreBranches");
+                    b.ToTable("StoreBranch");
                 });
 
             modelBuilder.Entity("EBISX_POS.API.Models.Item", b =>
@@ -583,6 +727,47 @@ namespace EBISX_POS.API.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("EBISX_POS.API.Models.Manager.CustomerReceipt", b =>
+                {
+                    b.HasOne("ManagerLibrary.ManagerData.StoreBranch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EBISX_POS.API.Models.User", "Cashier")
+                        .WithMany()
+                        .HasForeignKey("CashierUserEmail")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+
+                    b.Navigation("Cashier");
+                });
+
+            modelBuilder.Entity("EBISX_POS.API.Models.Manager.DailySalesSummary", b =>
+                {
+                    b.HasOne("ManagerLibrary.ManagerData.StoreBranch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
+            modelBuilder.Entity("EBISX_POS.API.Models.Manager.OrderPurchaseSummary", b =>
+                {
+                    b.HasOne("ManagerLibrary.ManagerData.StoreBranch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Branch");
+                });
+
             modelBuilder.Entity("EBISX_POS.API.Models.Menu", b =>
                 {
                     b.HasOne("EBISX_POS.API.Models.AddOnType", "AddOnType")
@@ -608,6 +793,12 @@ namespace EBISX_POS.API.Migrations
 
             modelBuilder.Entity("EBISX_POS.API.Models.Order", b =>
                 {
+                    b.HasOne("ManagerLibrary.ManagerData.StoreBranch", "Branch")
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("EBISX_POS.API.Models.User", "Cashier")
                         .WithMany()
                         .HasForeignKey("CashierUserEmail")
@@ -617,6 +808,8 @@ namespace EBISX_POS.API.Migrations
                     b.HasOne("EBISX_POS.API.Models.User", "Manager")
                         .WithMany()
                         .HasForeignKey("ManagerUserEmail");
+
+                    b.Navigation("Branch");
 
                     b.Navigation("Cashier");
 
@@ -660,7 +853,7 @@ namespace EBISX_POS.API.Migrations
                     b.Navigation("ManagerOut");
                 });
 
-            modelBuilder.Entity("ManagerLibrary.Data.Receipt", b =>
+            modelBuilder.Entity("ManagerLibrary.Data.Invoice", b =>
                 {
                     b.HasOne("ManagerLibrary.ManagerData.StoreBranch", "Branch")
                         .WithMany("CustomerReceipts")
@@ -680,7 +873,7 @@ namespace EBISX_POS.API.Migrations
 
                     b.HasOne("EBISX_POS.API.Models.Order", "Order")
                         .WithOne("Receipt")
-                        .HasForeignKey("ManagerLibrary.Data.Receipt", "OrderId")
+                        .HasForeignKey("ManagerLibrary.Data.Invoice", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -18,7 +18,7 @@ namespace EBISX_POS.API.Models
         public User? Manager { get; set; }
 
         // One-to-One Relationship with CustomerReceipt
-        public Receipt? Receipt { get; set; }
+        public Invoice? Receipt { get; set; }
 
         // Navigation property for related Items
         public ICollection<Item> Items { get; set; } = new List<Item>();

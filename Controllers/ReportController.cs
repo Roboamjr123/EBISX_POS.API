@@ -52,5 +52,27 @@ namespace EBISX_POS.API.Controllers
             return Ok(receipts);
         }
 
+        [HttpGet("Sales-Track")]
+        public async Task<IActionResult> GetSalesTrack()
+        {
+            var salesTrack = await _reportServices.GetSalesTrack();
+            if (salesTrack == null || !salesTrack.Any())
+            {
+                return NotFound(new { message = "No sales track found" });
+            }
+            return Ok(salesTrack);
+        }
+
+        [HttpGet("Daily-Sales-Receipts")]
+        public async Task<IActionResult> GetDailySalesReceipts()
+        {
+            var dailySalesReceipts = await _reportServices.GetDailySalesReceipts();
+            if (dailySalesReceipts == null || !dailySalesReceipts.Any())
+            {
+                return NotFound(new { message = "No daily sales receipts found" });
+            }
+            return Ok(dailySalesReceipts);
+        }
+
     }
 }
