@@ -15,11 +15,13 @@ namespace EBISX_POS.API.Data
                 serviceProvider.GetRequiredService<DbContextOptions<DataContext>>()))
             {
                 // Look for any data already in the database.
-                if (context.User.Any() || context.Category.Any() || context.Menu.Any() || context.Timestamp.Any() || context.Order.Any() || context.Item.Any()  )
+                if (context.User.Any() || context.Category.Any() || context.Menu.Any()
+                    || context.Timestamp.Any() || context.Order.Any() || context.Item.Any())
                 {
                     return;   // DB has been seeded
                 }
 
+                // --- Seed Users ---
                 var users = new User[]
                 {
                     new User { UserEmail = "user1@example.com", UserFName = "John", UserLName = "Doe", UserRole = "Manager" },
@@ -35,7 +37,7 @@ namespace EBISX_POS.API.Data
                 };
                 context.User.AddRange(users);
 
-    
+                // --- Seed Drink Types, AddOn Types, Categories, Menus ---
                 var drinkTypes = new DrinkType[] {
                     new DrinkType { DrinkTypeName = "Hot" },
                     new DrinkType { DrinkTypeName = "Cold" },
@@ -68,8 +70,8 @@ namespace EBISX_POS.API.Data
                     new Menu { MenuName = "Cheeseburger", MenuPrice = 5.99m, Category = categories[0]},
                     new Menu { MenuName = "Burger Ka Sakin", MenuPrice = 4.99m, Category = categories[0], HasDrink = false, HasAddOn = false },
                     new Menu { MenuName = "Burger Ka Sakin", MenuPrice = 5.99m, Category = categories[0]},
-                    new Menu { MenuName = "Cheese", MenuPrice = 0.99m, Category = categories[0], IsAddOn = true }, // Addon
-                    new Menu { MenuName = "Bacon", MenuPrice = 1.49m, Category = categories[0], IsAddOn = true },  // Addon
+                    new Menu { MenuName = "Cheese", MenuPrice = 0.99m, Category = categories[0], IsAddOn = true },
+                    new Menu { MenuName = "Bacon", MenuPrice = 1.49m, Category = categories[0], IsAddOn = true },
 
                     // Spaghetti
                     new Menu { MenuName = "Spaghetti Bolognese", MenuPrice = 6.99m, Category = categories[1], HasDrink = false, HasAddOn = false },
@@ -79,14 +81,14 @@ namespace EBISX_POS.API.Data
                     new Menu { MenuName = "Spaghetti w/ Chickensad", MenuPrice = 5.99m, Category = categories[1], HasDrink = false, HasAddOn = false },
                     new Menu { MenuName = "Spaghetti w/ Chickensad", MenuPrice = 6.99m, Category = categories[1]},
 
-                    //  Chickensad
+                    // Chickensad
                     new Menu { MenuName = "Chickensad", MenuPrice = 5.99m, Category = categories[2], HasDrink = false, HasAddOn = false },
                     new Menu { MenuName = "Chickensad", MenuPrice = 6.99m, Category = categories[2] },
                     new Menu { MenuName = "Chicken Sandwich", MenuPrice = 5.99m, Category = categories[2], HasDrink = false, HasAddOn = false },
                     new Menu { MenuName = "Chicken Sandwich", MenuPrice = 6.99m, Category = categories[2] },
                     new Menu { MenuName = "Grilled Chicken", MenuPrice = 9.99m, Category = categories[2], HasDrink = false, HasAddOn = false },
                     new Menu { MenuName = "Grilled Chicken", MenuPrice = 10.99m, Category = categories[2] },
-                    new Menu { MenuName = "Rice", MenuPrice = 1, Category = categories[2], HasDrink = false, HasAddOn = false },
+                    new Menu { MenuName = "Rice", MenuPrice = 1m, Category = categories[2], HasDrink = false, HasAddOn = false },
 
                     // Sandwich
                     new Menu { MenuName = "Club Sandwich", MenuPrice = 5.99m, Category = categories[3], HasDrink = false, HasAddOn = false },
@@ -125,52 +127,90 @@ namespace EBISX_POS.API.Data
                     new Menu { MenuName = "Bisaya Fries", MenuPrice = 2.49m, Category = categories[6], Size = MenuSize.R.ToString(), HasDrink = false, HasAddOn = false, IsAddOn = true, AddOnType = addOnTypes[0]   },
                     new Menu { MenuName = "Bisaya Fries", MenuPrice = 3.49m, Category = categories[6], Size = MenuSize.M.ToString(), HasDrink = false, HasAddOn = false, IsAddOn = true, AddOnType = addOnTypes[0]  },
                     new Menu { MenuName = "Bisaya Fries", MenuPrice = 4.49m, Category = categories[6], Size = MenuSize.L.ToString(), HasDrink = false, HasAddOn = false, IsAddOn = true, AddOnType = addOnTypes[0]  },
-
-
                 };
                 context.Menu.AddRange(menus);
 
-
+                // --- Seed Branches ---
                 var branches = new StoreBranch[]
                 {
-                     new StoreBranch {BranchName = "Guadalupe", BranchAddress = "Guadalupe, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123", PosNumber="1293023292"},
-                     new StoreBranch {BranchName = "Mabolo", BranchAddress = "Mabolo, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123", PosNumber= "1293023292" },
-                     new StoreBranch {BranchName = "Lapu-Lapu", BranchAddress = "Lapu-Lapu, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123",PosNumber="0293212323" },
+                    new StoreBranch { BranchName = "Guadalupe", BranchAddress = "Guadalupe, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123", PosNumber = "1293023292" },
+                    new StoreBranch { BranchName = "Mabolo", BranchAddress = "Mabolo, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123", PosNumber = "1293023292" },
+                    new StoreBranch { BranchName = "Lapu-Lapu", BranchAddress = "Lapu-Lapu, Cebu City", VAtRegTin = "12345456423", MinNo= "09123456789", SerialNumber = "SN23100232123", PosNumber = "0293212323" },
                 };
                 context.StoreBranch.AddRange(branches);
                 context.SaveChanges();
 
+                // --- Seed Orders ---
                 var orders = new Order[]
                 {
-                     new Order { OrderType = "Dine-In", TotalAmount = 20.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[1], BranchId = branches[0].BranchId },
-                     new Order { OrderType = "Takeaway", TotalAmount = 15.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[2], BranchId = branches[0].BranchId },
-                     new Order { OrderType = "Dine-In", TotalAmount = 25.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[3], BranchId = branches[0].BranchId },
-                     new Order { OrderType = "Takeaway", TotalAmount = 30.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[4], BranchId = branches[0].BranchId },
-                     new Order { OrderType = "Dine-In", TotalAmount = 35.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[5], BranchId = branches[0].BranchId },
-                     new Order { OrderType = "Takeaway", TotalAmount = 40.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[6], BranchId = branches[0].BranchId },
-                     new Order { OrderType = "Dine-In", TotalAmount = 45.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[7], BranchId = branches[0].BranchId },
-                     new Order { OrderType = "Takeaway", TotalAmount = 50.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[8], BranchId = branches[0].BranchId },
-                     new Order { OrderType = "Dine-In", TotalAmount = 55.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[9], BranchId = branches[0].BranchId },
-                     new Order { OrderType = "Takeaway", TotalAmount = 60.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[0], BranchId = branches[0].BranchId }
+                    new Order { OrderType = "Dine-In", TotalAmount = 20.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[1], BranchId = branches[0].BranchId },
+                    new Order { OrderType = "Takeaway", TotalAmount = 15.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[2], BranchId = branches[0].BranchId },
+                    new Order { OrderType = "Dine-In", TotalAmount = 25.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[3], BranchId = branches[0].BranchId },
+                    new Order { OrderType = "Takeaway", TotalAmount = 30.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[4], BranchId = branches[0].BranchId },
+                    new Order { OrderType = "Dine-In", TotalAmount = 35.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[5], BranchId = branches[0].BranchId },
+                    new Order { OrderType = "Takeaway", TotalAmount = 40.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[6], BranchId = branches[0].BranchId },
+                    new Order { OrderType = "Dine-In", TotalAmount = 45.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[7], BranchId = branches[0].BranchId },
+                    new Order { OrderType = "Takeaway", TotalAmount = 50.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[8], BranchId = branches[0].BranchId },
+                    new Order { OrderType = "Dine-In", TotalAmount = 55.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[9], BranchId = branches[0].BranchId },
+                    new Order { OrderType = "Takeaway", TotalAmount = 60.00m, CreatedAt = DateTimeOffset.Now, Cashier = users[0], BranchId = branches[0].BranchId }
                 };
                 context.Order.AddRange(orders);
                 context.SaveChanges();
 
-                var Receipts = new Invoice[]
+                // --- Seed Regular Invoices ---
+                var regularInvoices = new Invoice[]
                 {
-                    new Invoice { InvoiceNumber = "INV-0001", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[0].Id, ReceiptType = ReceiptType.Regular, Cashier = users[1], BranchId = branches[0].BranchId , CashInDrawer = 2000m   },
-                    new Invoice { InvoiceNumber = "INV-0002", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[1].Id, ReceiptType = ReceiptType.SeniorCitizen,  Cashier = users[2],BranchId = branches[0].BranchId, CashInDrawer = 2000m },
-                    new Invoice { InvoiceNumber = "INV-0003", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[2].Id, ReceiptType = ReceiptType.PWD,  Cashier = users[3], BranchId = branches[0].BranchId, CashInDrawer = 2000m },
-                    new Invoice { InvoiceNumber = "INV-0004", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[3].Id, ReceiptType = ReceiptType.Regular,  Cashier = users[4], BranchId = branches[0].BranchId, CashInDrawer = 2000m},
-                    new Invoice { InvoiceNumber = "INV-0005", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[4].Id, ReceiptType = ReceiptType.SeniorCitizen,  Cashier = users[5], BranchId = branches[0].BranchId, CashInDrawer = 2000m },
-                    new Invoice { InvoiceNumber = "INV-0006", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[5].Id, ReceiptType = ReceiptType.PWD, Cashier = users[6], BranchId = branches[0].BranchId , CashInDrawer = 2000m},
-                    new Invoice { InvoiceNumber = "INV-0007", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[6].Id, ReceiptType = ReceiptType.Regular,  Cashier = users[7], BranchId = branches[0].BranchId , CashInDrawer = 2000m },
-    
+                    new Invoice { InvoiceNumber = "INV-0001", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[0].Id, ReceiptType = ReceiptType.Regular, Cashier = users[1], BranchId = branches[0].BranchId, CashInDrawer = 2000m, GrossAmount = 1000m, Discount = 50m, ReturnAmount = 0m, VatableSales = 800m, VatExemptSales = 200m },
+                    new Invoice { InvoiceNumber = "INV-0002", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[1].Id, ReceiptType = ReceiptType.SeniorCitizen, Cashier = users[2], BranchId = branches[0].BranchId, CashInDrawer = 2000m, GrossAmount = 1200m, Discount = 75m, ReturnAmount = 20m, VatableSales = 900m, VatExemptSales = 300m },
+                    new Invoice { InvoiceNumber = "INV-0003", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[2].Id, ReceiptType = ReceiptType.PWD, Cashier = users[3], BranchId = branches[0].BranchId, CashInDrawer = 2000m, GrossAmount = 1100m, Discount = 60m, ReturnAmount = 10m, VatableSales = 850m, VatExemptSales = 250m },
+                    new Invoice { InvoiceNumber = "INV-0004", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[3].Id, ReceiptType = ReceiptType.Regular, Cashier = users[4], BranchId = branches[0].BranchId, CashInDrawer = 2000m, GrossAmount = 1300m, Discount = 80m, ReturnAmount = 15m, VatableSales = 950m, VatExemptSales = 350m },
+                    new Invoice { InvoiceNumber = "INV-0005", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[4].Id, ReceiptType = ReceiptType.SeniorCitizen, Cashier = users[5], BranchId = branches[0].BranchId, CashInDrawer = 2000m, GrossAmount = 1400m, Discount = 90m, ReturnAmount = 25m, VatableSales = 1000m, VatExemptSales = 400m },
+                    new Invoice { InvoiceNumber = "INV-0006", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[5].Id, ReceiptType = ReceiptType.PWD, Cashier = users[6], BranchId = branches[0].BranchId, CashInDrawer = 2000m, GrossAmount = 1500m, Discount = 85m, ReturnAmount = 30m, VatableSales = 1100m, VatExemptSales = 400m },
+                    new Invoice { InvoiceNumber = "INV-0007", ReceiptDate = DateTimeOffset.Now, ReceiptTime = DateTimeOffset.Now, OrderId = orders[6].Id, ReceiptType = ReceiptType.Regular, Cashier = users[7], BranchId = branches[0].BranchId, CashInDrawer = 2000m, GrossAmount = 1600m, Discount = 95m, ReturnAmount = 20m, VatableSales = 1150m, VatExemptSales = 450m },
                 };
-                context.Invoice.AddRange(Receipts);
+                context.Invoice.AddRange(regularInvoices);
                 context.SaveChanges();
 
-                
+                // --- Seed Daily Sales Invoice Receipts ---
+                // These samples simulate daily sales receipts for a branch.
+                var dailySalesInvoices = new Invoice[]
+                {
+                    new Invoice
+                    {
+                        InvoiceNumber = "DS-0001",
+                        ReceiptDate = DateTimeOffset.Now,
+                        ReceiptTime = DateTimeOffset.Now,
+                        OrderId = orders[0].Id,
+                        ReceiptType = ReceiptType.Regular,
+                        Cashier = users[1],
+                        BranchId = branches[0].BranchId,
+                        CashInDrawer = 1500m,
+                        GrossAmount = 1800m,
+                        Discount = 100m,
+                        ReturnAmount = 50m,
+                        VatableSales = 1400m,
+                        VatExemptSales = 400m,
+                        // Other fields can be set as needed
+                    },
+                    new Invoice
+                    {
+                        InvoiceNumber = "DS-0002",
+                        ReceiptDate = DateTimeOffset.Now,
+                        ReceiptTime = DateTimeOffset.Now,
+                        OrderId = orders[1].Id,
+                        ReceiptType = ReceiptType.SeniorCitizen,
+                        Cashier = users[2],
+                        BranchId = branches[0].BranchId,
+                        CashInDrawer = 1600m,
+                        GrossAmount = 2000m,
+                        Discount = 150m,
+                        ReturnAmount = 75m,
+                        VatableSales = 1600m,
+                        VatExemptSales = 400m,
+                    }
+                };
+                context.Invoice.AddRange(dailySalesInvoices);
+                context.SaveChanges();
             }
         }
     }

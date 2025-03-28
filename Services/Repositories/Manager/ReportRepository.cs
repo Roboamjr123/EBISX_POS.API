@@ -84,8 +84,33 @@ namespace ManagerLibrary.Services.Repositories
                     })
                     .ToListAsync();
         }
+        public async Task<List<GetCustomerReceiptDto>> GetCustomerReceiptById(string invoiceNumber)
+        {
+            return await _context.Invoice
+                    .Include(r => r.Order)
+                    .Include(r => r.Cashier)
+                    .Include(r => r.Order.Branch)
+                    .Where(r => r.InvoiceNumber == invoiceNumber)
+                    .Select(r => new GetCustomerReceiptDto
+                    {
+                        Id = r.Id,
+                        InvoiceNumber = r.InvoiceNumber,
+                        ReceiptDate = r.ReceiptDate.ToString("MM/dd/yyyy") ?? "N/A",
+                        ReceiptTime = r.ReceiptTime.ToString("HH:mm:ss") ?? "N/A",
+                        OrderId = r.Order.Id,
+                        TotalAmount = r.Order.TotalAmount,
+                        Vatablesales = r.VatableSales,
+                        VatAmount = r.VatAmount,
+                        VatExemptSales = r.VatExemptSales,
+                        ReceiptType = r.ReceiptType,
+                        CashierName = r.Cashier.UserFName,
+                        BranchName = r.Order.Branch.BranchName,
+                        BranchAddress = r.Order.Branch.BranchAddress
+                    })
+                    .ToListAsync();
+        }
 
-        public async Task<List<SalesTrackDto>> GetSalesTrack()
+        public async Task<List<GetSalesTrackDto>> GetSalesTrack()
         {
             var totalSales = await _context.Order.SumAsync(o => o.TotalAmount);
             var latestInvoice = await _context.Invoice
@@ -98,9 +123,9 @@ namespace ManagerLibrary.Services.Repositories
                                              })
                                              .FirstOrDefaultAsync();
 
-            return new List<SalesTrackDto>
+            return new List<GetSalesTrackDto>
             {
-                new SalesTrackDto
+                new GetSalesTrackDto
                 {
                     TotalSales = totalSales,
                     CashInDrawer = latestInvoice?.CashInDrawer ?? 0,
@@ -129,5 +154,7 @@ namespace ManagerLibrary.Services.Repositories
 
             return dailySalesReceipts;
         }
+
+        
     }
 }

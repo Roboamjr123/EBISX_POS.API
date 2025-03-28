@@ -1,6 +1,6 @@
 ﻿namespace EBISX_POS.API.Services.DTO.Manager
 {
-    public class SalesTrackDto
+    public class GetSalesTrackDto
     {
         public decimal TotalSales { get; set; }
         public decimal CashInDrawer { get; set; }

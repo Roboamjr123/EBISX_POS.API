@@ -12,9 +12,11 @@ namespace ManagerLibrary.Services.Interface
     {
         Task<string> AddBranch(BranchDto Addbranch);
         Task<List<BranchDto>> BranchList();
+        Task<List<GetCustomerReceiptDto>> GetCustomerReceiptById(string invoiceNumber);
         Task<List<GetCustomerReceiptDto>> GetCustomerReceipts();
-        Task<List<SalesTrackDto>> GetSalesTrack();
+        Task<List<GetSalesTrackDto>> GetSalesTrack();
         Task<List<GetDailySalesReceiptDto>> GetDailySalesReceipts();
+
 
 
 

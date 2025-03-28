@@ -51,6 +51,24 @@ namespace EBISX_POS.API.Controllers
             }
             return Ok(receipts);
         }
+        [HttpGet("CustomerInvoiceReceiptById")]
+        public async Task<IActionResult> GetCustomerReceiptById(string invoiceNumber)
+        {
+            if (string.IsNullOrWhiteSpace(invoiceNumber))
+            {
+                return BadRequest(new { message = "Invoice number cannot be empty." });
+            }
+
+            var trimmedInvoiceNumber = invoiceNumber.Trim();
+            var receipt = await _reportServices.GetCustomerReceiptById(trimmedInvoiceNumber);
+
+            if (receipt == null || !receipt.Any())
+            {
+                return NotFound(new { message = "No Invoice Receipt found" });
+            }
+
+            return Ok(receipt);
+        }
 
         [HttpGet("Sales-Track")]
         public async Task<IActionResult> GetSalesTrack()
@@ -73,6 +91,8 @@ namespace EBISX_POS.API.Controllers
             }
             return Ok(dailySalesReceipts);
         }
+
+
 
     }
 }
